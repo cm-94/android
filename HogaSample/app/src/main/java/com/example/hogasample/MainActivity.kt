@@ -1,5 +1,6 @@
 package com.example.hogasample
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -8,8 +9,8 @@ import com.example.hogasample.data.HogaData
 import com.example.hogasample.data.HogaDataSet
 
 class MainActivity : AppCompatActivity() {
-    lateinit var hogaDataSet : HogaDataSet
-    lateinit var hogaLayout : HogaLayout
+    lateinit var hogaDataSet: HogaDataSet
+    lateinit var hogaLayout: HogaLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +26,8 @@ class MainActivity : AppCompatActivity() {
         hogaLayout.setData(hogaDataSet, null)
     }
 
-    fun createDummyData(){
+    @SuppressLint("DefaultLocale")
+    fun createDummyData() {
 //        for (i in 0 until 10){
 //        for (i in 0..10 step 1){
         var currPrice = 1000 /// 현재가
@@ -34,20 +36,22 @@ class MainActivity : AppCompatActivity() {
 
         var hashData = HashMap<String, HogaData>()
 
-        for (i in 0..9 step(1)){
-            val askValue = (lowPrice..currPrice).random() // generated random from 0 to 10 included
-            val rate = ((currPrice - askValue) / currPrice).toFloat()
-            val amtValue = (0..5000).random() // generated random from 0 to 10 included
-            val askData = HogaData(askValue,amtValue, rate,1)
-            hashData.put("ask" + i + 1, askData)
+        /// 매도 호가
+        for (i in 0..9 step (1)) {
+            val askPrice = currPrice + 25 * (9 - i) // (currPrice..highPrice).random()
+            val rate = (((askPrice - currPrice) / currPrice.toDouble()) * 100).toFloat()
+            val amtValue = (0..5000).random()
+            val askData = HogaData(askPrice, amtValue, rate, -1)
+            hashData.put("ask_" + (i + 1), askData)
         }
 
-        for (i in 0..9 step(1)){
-            val bidValue = (currPrice..highPrice).random() // generated random from 0 to 10 included
-            val rate = ((bidValue - currPrice) / currPrice).toFloat()
-            val amtValue = (0..5000).random() // generated random from 0 to 10 included
-            val bidData = HogaData(bidValue,amtValue, rate,1)
-            hashData.put("bit" + (i + 1), bidData)
+        /// 매수 호가
+        for (i in 0..9 step (1)) {
+            val bidPrice = currPrice - 25 * (i + 1) // (lowPrice..currPrice).random()
+            val rate = ((bidPrice - currPrice) / currPrice.toDouble() * 100).toFloat() * -1
+            val amtValue = (0..5000).random()
+            val bidData = HogaData(bidPrice, amtValue, rate, 1)
+            hashData.put("bid_" + (i + 1), bidData)
         }
         hogaDataSet = HogaDataSet(hashData)
     }

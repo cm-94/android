@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/hogaBarBlue"
+    android:background="@color/white"
     tools:context=".MainActivity">
 
     <com.example.hogasample.control.hoga.HogaLayout
         android:id="@+id/hoga"
-        android:background="@color/hogaBarBlue"
+        android:background="@color/hogaBgBlue"
+        android:paddingTop="200dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
