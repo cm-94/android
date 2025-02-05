@@ -2,4 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="bgGray">#FFDDDDDD</color>
+
+    <color name="hogaBgBlue">#FFE9F3FF</color>
+    <color name="hogaBarBlue">#FFD3E7FF</color>
+    <color name="hogaTxtBlue">#FF3A80DF</color>
+
+    <color name="hogaBgRed">#FFFFEAE9</color>
+    <color name="hogaBarRed">#FFFFD7D7</color>
+    <color name="hogaTxtRed">#FFDA4040</color>
+
+    <color name="hogaTxtGray">#FF707070</color>
 </resources>
