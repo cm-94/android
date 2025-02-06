@@ -9,8 +9,9 @@ import android.graphics.Typeface
 import androidx.core.content.ContextCompat.getColor
 import com.example.hogasample.R
 import com.example.hogasample.data.HogaData
+import java.text.DecimalFormat
 
-class PriceBarItem(var context: Context) {
+class HogaCellItem(var context: Context) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val paint_font = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -33,7 +34,7 @@ class PriceBarItem(var context: Context) {
     var barColor: Int? = null // Bar 색상
     var txtColor = Color.GRAY // 글자 색상
     var subTxtColor: Int? = null // 글자 색상
-    var type = HogaType.PRICE  // 글자 정렬
+    var type = HogaCellType.PRICE  // 글자 정렬
     var maxAmount = 0 // 최대값
 
 //    var mark : String? = null // 시 고 저 마크 표시 유무 >  Center Bar Item 에 넣기!!
@@ -62,15 +63,15 @@ class PriceBarItem(var context: Context) {
         canvas.drawRect(rect_bg, paint)
 
         /// 매도 & 매수
-        if (type != HogaType.PRICE) {
+        if (type != HogaCellType.PRICE) {
             /** 2. 봉 칠하기 */
             // 1. 색깔 지정
             paint.color = this.barColor!!
             // 2. 좌표
             val startBarX =
-                if (type == HogaType.ASK) (width - barWidth + startX).toFloat() else startX.toFloat()
+                if (type == HogaCellType.ASK) (width - barWidth + startX).toFloat() else startX.toFloat()
             val endBarX =
-                if (type == HogaType.ASK) (width + startX).toFloat() else (startX + barWidth).toFloat()
+                if (type == HogaCellType.ASK) (width + startX).toFloat() else (startX + barWidth).toFloat()
             rect_bar = RectF(startBarX, startY.toFloat(), endBarX, (startY + height).toFloat())
 
             // 3. 그리기
@@ -88,10 +89,14 @@ class PriceBarItem(var context: Context) {
              * TODO: Y축(높이) 기준으로 리사이즈 동시 적용시켜야 한다.
              */
             //텍스트 정렬
-            var textWidth = paint_font.measureText(amount.toString())
+            val decimal = DecimalFormat("#,###")
+            val txtPrice = decimal.format(amount)
+
+            var textWidth = paint_font.measureText(txtPrice)
             var textHeight = paint_font.ascent()
+
             canvas.drawText(
-                amount.toString(),
+                txtPrice.toString(),
                 (startX + width / 2 - textWidth / 2).toFloat(),
                 ((height - textHeight) / 2 + startY).toFloat(),
                 paint_font
@@ -113,12 +118,14 @@ class PriceBarItem(var context: Context) {
              * TODO: Y축(높이) 기준으로 리사이즈 동시 적용시켜야 한다.
              */
             //텍스트 정렬
-            var textWidth = paint_font.measureText(amount.toString())
+            var decimal = DecimalFormat("#,###")
+            val txtPrice = decimal.format(price)
+
+            var textWidth = paint_font.measureText(txtPrice)
             var textHeight = paint_font.ascent()
 
             canvas.drawText(
-                price.toString(),
-//                (startX * 1.5 - textWidth / 2).toFloat(),
+                txtPrice,
                 (startX + width / 2 - textWidth / 2).toFloat(),
                 ((height - textHeight) / 2 + startY).toFloat(),
                 paint_font
@@ -126,13 +133,16 @@ class PriceBarItem(var context: Context) {
 
             /// 증감율
             paint_font.color = subTxtColor!!
-            paint_font.textSize = 22F
-            textWidth = paint_font.measureText(rate.toString() + "%")
+            paint_font.textSize = 26F
+
+            decimal = DecimalFormat("#,##0.00")
+            val txtRate = decimal.format(rate)
+
+            textWidth = paint_font.measureText("$txtRate%")
             textHeight = paint_font.ascent()
 
             canvas.drawText(
-                rate.toString() + "%",
-//                (startX * 2 - textWidth).toFloat(),
+                "$txtRate%",
                 (width + startX - textWidth - 10).toFloat(),
                 ((height - textHeight) / 2 + startY).toFloat(),
                 paint_font
@@ -149,7 +159,7 @@ class PriceBarItem(var context: Context) {
 
     fun setData(
         item: HogaData,
-        type: HogaType,
+        type: HogaCellType,
         max: Int
     ) {
         this.type = type
@@ -158,11 +168,13 @@ class PriceBarItem(var context: Context) {
         this.rate = item.rate
         this.maxAmount = max
 
-        if (type == HogaType.ASK) {
+        this.bdColor = getColor(context, R.color.hogabdGray)
+
+        if (type == HogaCellType.ASK) {
             this.bgColor = getColor(context, R.color.hogaBgBlue)
             this.barColor = getColor(context, R.color.hogaBarBlue)
             this.txtColor = getColor(context, R.color.hogaTxtBlue)
-        } else if (type == HogaType.BID) {
+        } else if (type == HogaCellType.BID) {
             this.bgColor = getColor(context, R.color.hogaBgRed)
             this.barColor = getColor(context, R.color.hogaBarRed)
             this.txtColor = getColor(context, R.color.hogaTxtRed)
@@ -184,7 +196,7 @@ class PriceBarItem(var context: Context) {
     }
 }
 
-enum class HogaType {
+enum class HogaCellType {
     ASK { // 매도
         override fun value(): String {
             return "ASK"

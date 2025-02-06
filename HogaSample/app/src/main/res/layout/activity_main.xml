@@ -10,8 +10,8 @@
 
     <com.example.hogasample.control.hoga.HogaLayout
         android:id="@+id/hoga"
-        android:background="@color/hogaBgBlue"
-        android:paddingTop="200dp"
+        android:background="@color/bgGray"
+        android:paddingTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
